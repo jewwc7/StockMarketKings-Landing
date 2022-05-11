@@ -419,7 +419,7 @@ const TopNav = ({ largeScreen, smallScreen, veryLargeScreen }) => {
         <img src={appIcon} alt="TuffHammer Logo" style={{ height: "100%" }} />
         <h2 style={{ marginLeft: 8 }}>Stock Market Kings</h2>
       </Grid>
-      <Hidden smDown>
+      <Hidden mdDown>
         <Grid
           item
           style={{
