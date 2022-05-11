@@ -33,7 +33,7 @@ import {
 function App() {
   const theme = useTheme();
 
-  const extraSmallScreen = useMediaQuery(theme.breakpoints.down("xs"), {
+  const extraSmallScreen = useMediaQuery(theme.breakpoints.only("xs"), {
     defaultMatches: true,
   });
   //xs,sm
@@ -75,7 +75,7 @@ function App() {
     veryLargeScreen,
     photoHeight,
   };
-  const firstSectionHeight = extraSmallScreen ? 870 : smallScreen ? 700 : 600;
+  const firstSectionHeight = extraSmallScreen ? 800 : smallScreen ? 700 : 600;
   return (
     <div style={{}}>
       <TopNav {...pageProps} />
@@ -294,7 +294,7 @@ const ThirdSection = ({
           style={{
             width: photoHeight,
             height: photoHeight,
-            top: smallScreen ? 0 : 80,
+            top: smallScreen ? 10 : 80,
             position: "relative",
             // borderRadius: 5,
             // filter: "brightness(80%)",
@@ -377,7 +377,7 @@ const FifthSection = ({
           style={{
             width: photoHeight,
             height: photoHeight,
-            top: smallScreen ? 0 : 80,
+            top: smallScreen ? 10 : 80,
             position: "relative",
             // borderRadius: 5,
             // filter: "brightness(80%)",
