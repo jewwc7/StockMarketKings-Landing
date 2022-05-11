@@ -20,7 +20,5 @@ h1 {
 }
 
 .boxed-span {
-  padding: 10 10;
   background-color: white;
-  border-radius: 50;
 }

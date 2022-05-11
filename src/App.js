@@ -11,12 +11,19 @@ import {
   Paper,
   Hidden,
   Container,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 //import DehazeIcon from "@material-ui/icons/Dehaze";
 
 import sectionOne from "./Photos/sectionOne.svg";
 import appIcon from "./Photos/appIcon.svg";
 import fundChart from "./Photos/fundchart.svg";
+import compPhotos from "./Photos/compphoto.svg";
+import community from "./Photos/community.svg";
+import empire from "./Photos/empire.svg";
+import funds from "./Photos/funds.svg";
+
 import {
   BrowserRouter as Router,
   Switch,
@@ -24,55 +31,115 @@ import {
   useNavigate,
 } from "react-router-dom";
 function App() {
+  const theme = useTheme();
+
+  const extraSmallScreen = useMediaQuery(theme.breakpoints.down("xs"), {
+    defaultMatches: true,
+  });
+  //xs,sm
+  const smallScreen = useMediaQuery(theme.breakpoints.down("sm"), {
+    defaultMatches: true,
+  });
+
+  //md, lg
+  const largeScreen = useMediaQuery(theme.breakpoints.up("md"), {
+    defaultMatches: true,
+  });
+
+  //xl
+  const veryLargeScreen = useMediaQuery(theme.breakpoints.up("xl"), {
+    defaultMatches: true,
+  });
+
+  const photoHeight = getPhotoDimensions();
+  const padding = addPadding();
+
+  function addPadding() {
+    if (smallScreen)
+      return {
+        paddingLeft: 16,
+        paddingRight: 16,
+      };
+    else return {};
+  }
+  function getPhotoDimensions() {
+    if (smallScreen) return 300;
+    if (largeScreen) return 600;
+    if (veryLargeScreen) return 800;
+    return 600;
+  }
+
+  const pageProps = {
+    largeScreen,
+    smallScreen,
+    veryLargeScreen,
+    photoHeight,
+  };
+  const firstSectionHeight = extraSmallScreen ? 870 : smallScreen ? 700 : 600;
   return (
     <div style={{}}>
-      <TopNav />
+      <TopNav {...pageProps} />
+
       <Grid
         item
         container
         xs={12}
-        style={{ backgroundColor: "white", height: 500 }}
+        style={{
+          backgroundColor: "white",
+          height: firstSectionHeight,
+          paddingTop: 32,
+        }}
       >
-        <FirstSection />
+        <FirstSection {...pageProps} />
       </Grid>
       <Grid
         item
         container
         xs={12}
-        style={{ backgroundColor: "#E9ECF2", paddingTop: 32 }}
+        style={{ backgroundColor: "#E9ECF2", paddingTop: 32, ...padding }}
       >
-        <SecondSection />
+        <SecondSection {...pageProps} />
       </Grid>
       <Grid
         item
         container
         xs={12}
-        style={{ backgroundColor: "#E9ECF2", paddingTop: 32 }}
+        style={{ backgroundColor: "white", paddingTop: 32, ...padding }}
       >
-        <ThirdSection />
+        <ThirdSection {...pageProps} />
       </Grid>
       <Grid
         item
         container
         xs={12}
-        style={{ backgroundColor: "#26437C", paddingTop: 32 }}
+        style={{
+          backgroundColor: "#26437C",
+          paddingTop: 32,
+          ...padding,
+          flex: 1,
+        }}
       >
-        <FourthSection />
+        <FourthSection {...pageProps} />
       </Grid>
       <Grid
         item
         container
         xs={12}
-        style={{ backgroundColor: "#E9ECF2", paddingTop: 32 }}
+        style={{ backgroundColor: "#E9ECF2", paddingTop: 32, ...padding }}
       >
-        <FifthSection />
+        <FifthSection {...pageProps} />
       </Grid>
       <Footer />
     </div>
   );
 }
 
-const FirstSection = () => {
+const FirstSection = ({
+  largeScreen,
+  smallScreen,
+  veryLargeScreen,
+  photoHeight,
+}) => {
   return (
     <Grid
       item
@@ -81,10 +148,8 @@ const FirstSection = () => {
       style={{
         //   justifyContent: "space-evenly",
         //   alignItems: "center",
-        height: 500,
         position: "relative",
-        borderBottomColor: "red",
-        borderBottomWidth: 3,
+        flex: 1,
       }}
     >
       <Grid xs={12} md={6} container item alignItems={"center"}>
@@ -126,8 +191,8 @@ const FirstSection = () => {
             src={fundChart}
             alt="me"
             style={{
-              width: "100%",
-              height: "100%",
+              width: photoHeight,
+              height: photoHeight,
 
               // borderRadius: 5,
               // filter: "brightness(80%)",
@@ -139,21 +204,37 @@ const FirstSection = () => {
   );
 };
 
-const SecondSection = () => {
+const SecondSection = ({
+  largeScreen,
+  smallScreen,
+  veryLargeScreen,
+  photoHeight,
+}) => {
+  const reversedDirection = smallScreen ? "row-reverse" : null;
   return (
     <Grid
       item
       container
       xs={12}
-      style={{ justifyContent: "space-evenly", alignItems: "center" }}
+      //direction={reversedDirection}
+
+      style={{
+        justifyContent: "space-evenly",
+        alignItems: "center",
+        //   position: "relative",
+        flex: 1,
+        //   flexDirection: "row-reverse",
+      }}
     >
       <Grid item xs={12} md={6}>
         <img
-          src={sectionOne}
+          src={funds}
           alt="me"
           style={{
-            width: 600,
-            height: 600,
+            width: photoHeight,
+            height: photoHeight,
+            top: smallScreen ? 0 : 80,
+            position: "relative",
             // borderRadius: 5,
 
             // filter: "brightness(80%)",
@@ -174,7 +255,12 @@ const SecondSection = () => {
   );
 };
 
-const ThirdSection = () => {
+const ThirdSection = ({
+  largeScreen,
+  smallScreen,
+  veryLargeScreen,
+  photoHeight,
+}) => {
   return (
     <Grid
       item
@@ -186,9 +272,15 @@ const ThirdSection = () => {
         //  position: "sticky",
       }}
     >
-      <Grid item xs={12} md={5}>
+      <Grid item xs={12} md={5} style={{}}>
         <h1>
-          Start <span className="boxed-span">Competitions</span>
+          Start{" "}
+          <span
+            className="boxed-span"
+            style={{ color: "white", backgroundColor: "#151515" }}
+          >
+            Competitions
+          </span>
         </h1>
         <p>
           Place your created funds up against other users. You decide the
@@ -197,11 +289,13 @@ const ThirdSection = () => {
       </Grid>
       <Grid item xs={12} md={6}>
         <img
-          src={sectionOne}
+          src={compPhotos}
           alt="me"
           style={{
-            width: 600,
-            height: 600,
+            width: photoHeight,
+            height: photoHeight,
+            top: smallScreen ? 0 : 80,
+            position: "relative",
             // borderRadius: 5,
             // filter: "brightness(80%)",
           }}
@@ -211,7 +305,12 @@ const ThirdSection = () => {
   );
 };
 
-const FourthSection = () => {
+const FourthSection = ({
+  largeScreen,
+  smallScreen,
+  veryLargeScreen,
+  photoHeight,
+}) => {
   return (
     <Grid
       item
@@ -221,11 +320,13 @@ const FourthSection = () => {
     >
       <Grid item xs={12} md={6}>
         <img
-          src={sectionOne}
+          src={community}
           alt="me"
           style={{
-            width: 600,
-            height: 600,
+            width: photoHeight,
+            height: photoHeight,
+            top: smallScreen ? 0 : 80,
+            position: "relative",
             // borderRadius: 5,
             // filter: "brightness(80%)",
           }}
@@ -247,7 +348,12 @@ const FourthSection = () => {
   );
 };
 
-const FifthSection = () => {
+const FifthSection = ({
+  largeScreen,
+  smallScreen,
+  veryLargeScreen,
+  photoHeight,
+}) => {
   return (
     <Grid
       item
@@ -256,7 +362,9 @@ const FifthSection = () => {
       style={{ justifyContent: "space-evenly", alignItems: "center" }}
     >
       <Grid item xs={12} md={5}>
-        <h1>Build the Greatest Empire</h1>
+        <h1>
+          <span className="boxed-span">Build</span> the Greatest Empire
+        </h1>
         <p>
           You make(and lose) money by competing and your created funds
           performance.Will you come out on top?{" "}
@@ -264,11 +372,13 @@ const FifthSection = () => {
       </Grid>
       <Grid item xs={12} md={6}>
         <img
-          src={sectionOne}
+          src={empire}
           alt="me"
           style={{
-            width: 600,
-            height: 600,
+            width: photoHeight,
+            height: photoHeight,
+            top: smallScreen ? 0 : 80,
+            position: "relative",
             // borderRadius: 5,
             // filter: "brightness(80%)",
           }}
@@ -278,7 +388,7 @@ const FifthSection = () => {
   );
 };
 
-const TopNav = () => {
+const TopNav = ({ largeScreen, smallScreen, veryLargeScreen }) => {
   return (
     <Grid
       item
@@ -286,59 +396,67 @@ const TopNav = () => {
       style={{
         height: 80,
         alignItems: "center",
+        borderBottom: "1.5px solid ",
+        paddingLeft: 8,
+        paddingRight: 8,
       }}
     >
       <Grid
         item
         container
-        justifyContent="flex-start"
+        justifyContent={smallScreen ? "space-between" : "center"}
         alignItems="center"
+        direction={"row"}
         style={{
           height: "80%",
-          paddingLeft: 8,
+          //  paddingLeft: 8,
           cursor: "pointer",
           // backgroundColor: "blue",
         }}
-        xs={6}
+        xs={12}
+        md={6}
       >
         <img src={appIcon} alt="TuffHammer Logo" style={{ height: "100%" }} />
+        <h2 style={{ marginLeft: 8 }}>Stock Market Kings</h2>
       </Grid>
-      <Grid
-        item
-        style={{
-          paddingRight: "5%",
-          justifyContent: "flex-end",
-          display: "flex",
-        }}
-        xs={6}
-      >
-        <Hidden smDown>
-          <Button onClick={() => {}}>
-            <p className="nav-btns">Invest</p>
-          </Button>
-          <Button
-            onClick={() => {
-              setTimeout(() => {
-                window.scrollTo({
-                  top: 750,
-                  behavior: "smooth",
-                });
-              }, 500);
-            }}
-          >
-            <p className="nav-btns">Compete</p>
-          </Button>
-          <Button className="nav-btns">
-            <p className="nav-btns">Download</p>
-          </Button>
-          <Button className="nav-btns">
-            <p className="nav-btns">Contact</p>
-          </Button>
-        </Hidden>
-        <Hidden mdUp>
-          <IconButton></IconButton>
-        </Hidden>
-      </Grid>
+      <Hidden smDown>
+        <Grid
+          item
+          style={{
+            paddingRight: "5%",
+            justifyContent: "flex-end",
+            display: "flex",
+          }}
+          xs={6}
+        >
+          <Hidden smDown>
+            <Button onClick={() => {}}>
+              <p className="nav-btns">Invest</p>
+            </Button>
+            <Button
+              onClick={() => {
+                setTimeout(() => {
+                  window.scrollTo({
+                    top: 750,
+                    behavior: "smooth",
+                  });
+                }, 500);
+              }}
+            >
+              <p className="nav-btns">Compete</p>
+            </Button>
+            <Button className="nav-btns">
+              <p className="nav-btns">Download</p>
+            </Button>
+            <Button className="nav-btns">
+              <p className="nav-btns">Contact</p>
+            </Button>
+          </Hidden>
+          <Hidden mdUp>
+            <IconButton></IconButton>
+          </Hidden>
+        </Grid>
+      </Hidden>
     </Grid>
   );
 };
