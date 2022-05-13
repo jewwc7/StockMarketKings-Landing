@@ -13,6 +13,7 @@ import {
   Container,
   useMediaQuery,
   useTheme,
+  createTheme,
 } from "@mui/material";
 //import DehazeIcon from "@material-ui/icons/Dehaze";
 
@@ -23,6 +24,11 @@ import compPhotos from "./Photos/compphoto.svg";
 import community from "./Photos/community.svg";
 import empire from "./Photos/empire.svg";
 import funds from "./Photos/funds.svg";
+import smallFunds from "./Photos/funds-small.svg";
+import smallEmpire from "./Photos/empire-small.svg";
+import smallCommunity from "./Photos/community-small.svg";
+import smallCompPhoto from "./Photos/compphoto-small.svg";
+import twitter from "./Photos/twitter.svg";
 
 import {
   BrowserRouter as Router,
@@ -30,32 +36,32 @@ import {
   Route,
   useNavigate,
 } from "react-router-dom";
+const theme = createTheme({
+  breakpoints: {
+    values: {
+      mobile: 0,
+      tablet: 640,
+      largeTablet: 840, //haldSCreen too
+      laptop: 1024,
+      desktop: 1200,
+    },
+  },
+});
+
 function App() {
-  const theme = useTheme();
+  const mobile = useMediaQuery(theme.breakpoints.down("tablet"), {}); //xs, sm
+  const tablet = useMediaQuery(theme.breakpoints.down("largeTablet"), {}); //md
+  const largeTablet = useMediaQuery(theme.breakpoints.down("laptop"), {}); //md
 
-  const extraSmallScreen = useMediaQuery(theme.breakpoints.only("xs"), {
-    defaultMatches: true,
-  });
-  //xs,sm
-  const smallScreen = useMediaQuery(theme.breakpoints.down("sm"), {
-    defaultMatches: true,
-  });
-
-  //md, lg
-  const largeScreen = useMediaQuery(theme.breakpoints.up("md"), {
-    defaultMatches: true,
-  });
-
-  //xl
-  const veryLargeScreen = useMediaQuery(theme.breakpoints.up("xl"), {
-    defaultMatches: true,
-  });
+  const laptop = useMediaQuery(theme.breakpoints.down("desktop"), {}); //large
+  const desktop = useMediaQuery(theme.breakpoints.up("desktop"), {}); //xl
 
   const photoHeight = getPhotoDimensions();
   const padding = addPadding();
-
+  const textAlignment = getTextAlignment();
   function addPadding() {
-    if (smallScreen)
+    console.log(laptop);
+    if (mobile)
       return {
         paddingLeft: 16,
         paddingRight: 16,
@@ -63,21 +69,37 @@ function App() {
     else return {};
   }
   function getPhotoDimensions() {
-    if (smallScreen) return 300;
-    if (largeScreen) return 600;
-    if (veryLargeScreen) return 800;
-    return 600;
+    if (mobile) return 300;
+    if (tablet) return 600;
+    if (largeTablet) return 600;
+    if (laptop) return 800;
+    return 800; //must be a large Screen
+  }
+
+  function getTextAlignment() {
+    if (mobile) {
+      return {}; //stay left aligned on mobile
+    }
+    if (tablet) {
+      //center on tablet
+      return {
+        textAlign: "center",
+      };
+    } else return {};
   }
 
   const pageProps = {
-    largeScreen,
-    smallScreen,
-    veryLargeScreen,
     photoHeight,
+    mobile,
+    tablet,
+    desktop,
+    laptop,
+    largeTablet,
+    textAlignment,
   };
-  const firstSectionHeight = extraSmallScreen ? 800 : smallScreen ? 700 : 600;
+  const firstSectionHeight = mobile ? 800 : tablet ? 800 : 600;
   return (
-    <div style={{}}>
+    <Grid style={{ flex: 1 }}>
       <TopNav {...pageProps} />
 
       <Grid
@@ -116,7 +138,6 @@ function App() {
           backgroundColor: "#26437C",
           paddingTop: 32,
           ...padding,
-          flex: 1,
         }}
       >
         <FourthSection {...pageProps} />
@@ -130,16 +151,11 @@ function App() {
         <FifthSection {...pageProps} />
       </Grid>
       <Footer />
-    </div>
+    </Grid>
   );
 }
 
-const FirstSection = ({
-  largeScreen,
-  smallScreen,
-  veryLargeScreen,
-  photoHeight,
-}) => {
+const FirstSection = ({ photoHeight, textAlignment, tablet }) => {
   return (
     <Grid
       item
@@ -186,16 +202,19 @@ const FirstSection = ({
           width: "100%",
         }}
       >
-        <Grid item container xs={12} style={{ height: "100%", width: "100%" }}>
+        <Grid
+          item
+          container
+          xs={12}
+          justifyContent={tablet ? "center" : null}
+          style={{ height: "100%", width: "100%" }}
+        >
           <img
             src={fundChart}
             alt="me"
             style={{
               width: photoHeight,
               height: photoHeight,
-
-              // borderRadius: 5,
-              // filter: "brightness(80%)",
             }}
           />
         </Grid>
@@ -205,48 +224,51 @@ const FirstSection = ({
 };
 
 const SecondSection = ({
-  largeScreen,
-  smallScreen,
-  veryLargeScreen,
   photoHeight,
+  mobile,
+  largeTablet,
+  tablet,
+  desktop,
+  laptop,
+  textAlignment,
 }) => {
-  const reversedDirection = smallScreen ? "row-reverse" : null;
   return (
     <Grid
       item
       container
       xs={12}
-      //direction={reversedDirection}
-
       style={{
-        justifyContent: "space-evenly",
+        justifyContent: tablet ? "space-between" : "space-evenly",
         alignItems: "center",
         //   position: "relative",
         flex: 1,
         //   flexDirection: "row-reverse",
       }}
     >
-      <Grid item xs={12} md={6}>
+      <Grid
+        item
+        container
+        xs={12}
+        md={5}
+        justifyContent={tablet ? "center" : null}
+      >
         <img
-          src={funds}
+          src={tablet ? smallFunds : funds}
           alt="me"
           style={{
             width: photoHeight,
             height: photoHeight,
-            top: smallScreen ? 0 : 80,
+            top: tablet ? 10 : 80,
             position: "relative",
-            // borderRadius: 5,
-
-            // filter: "brightness(80%)",
           }}
         />
       </Grid>
       <Grid item xs={12} md={5}>
-        <h1>
+        <h1 style={{ ...textAlignment }}>
           <span className="boxed-span">Create </span>Funds and{" "}
           <span className="boxed-span">Test</span> Strategies
         </h1>
-        <p>
+        <p style={{ ...textAlignment }}>
           Based on real stock market data, you’ll create funds(basket of stocks)
           and track their performance over time.
         </p>
@@ -256,10 +278,12 @@ const SecondSection = ({
 };
 
 const ThirdSection = ({
-  largeScreen,
-  smallScreen,
-  veryLargeScreen,
+  textAlignment,
   photoHeight,
+  mobile,
+  tablet,
+  desktop,
+  laptop,
 }) => {
   return (
     <Grid
@@ -267,13 +291,13 @@ const ThirdSection = ({
       container
       xs={12}
       style={{
-        justifyContent: "space-evenly",
+        justifyContent: tablet ? "space-evenly" : "space-evenly",
         alignItems: "center",
-        //  position: "sticky",
+        flex: 1,
       }}
     >
-      <Grid item xs={12} md={5} style={{}}>
-        <h1>
+      <Grid item xs={12} md={4}>
+        <h1 style={{ ...textAlignment }}>
           Start{" "}
           <span
             className="boxed-span"
@@ -282,19 +306,25 @@ const ThirdSection = ({
             Competitions
           </span>
         </h1>
-        <p>
+        <p style={{ ...textAlignment }}>
           Place your created funds up against other users. You decide the
           amount, competitors allowed, max stocks allowed and more!
         </p>
       </Grid>
-      <Grid item xs={12} md={6}>
+      <Grid
+        item
+        container
+        xs={12}
+        md={7}
+        justifyContent={tablet ? "center" : null}
+      >
         <img
-          src={compPhotos}
+          src={tablet ? smallCompPhoto : compPhotos}
           alt="me"
           style={{
             width: photoHeight,
             height: photoHeight,
-            top: smallScreen ? 10 : 80,
+            top: tablet ? 10 : 80,
             position: "relative",
             // borderRadius: 5,
             // filter: "brightness(80%)",
@@ -306,26 +336,38 @@ const ThirdSection = ({
 };
 
 const FourthSection = ({
-  largeScreen,
-  smallScreen,
-  veryLargeScreen,
+  textAlignment,
   photoHeight,
+  mobile,
+  tablet,
+  desktop,
+  laptop,
 }) => {
   return (
     <Grid
       item
       container
       xs={12}
-      style={{ justifyContent: "space-evenly", alignItems: "center" }}
+      style={{
+        justifyContent: tablet ? "space-between" : "space-evenly",
+        alignItems: "center",
+        flexDirection: "row-reverse",
+      }}
     >
-      <Grid item xs={12} md={6}>
+      <Grid
+        item
+        container
+        xs={12}
+        md={5}
+        justifyContent={tablet ? "center" : null}
+      >
         <img
-          src={community}
+          src={tablet ? smallCommunity : community}
           alt="me"
           style={{
             width: photoHeight,
             height: photoHeight,
-            top: smallScreen ? 0 : 80,
+            top: tablet ? 0 : 80,
             position: "relative",
             // borderRadius: 5,
             // filter: "brightness(80%)",
@@ -333,13 +375,13 @@ const FourthSection = ({
         />
       </Grid>
       <Grid item xs={12} md={5}>
-        <h1 style={{ color: "white" }}>
+        <h1 style={{ color: "white", ...textAlignment }}>
           Browse the{" "}
           <span className="boxed-span" style={{ backgroundColor: "#151515" }}>
             Community
           </span>
         </h1>
-        <p style={{ color: "white" }}>
+        <p style={{ color: "white", ...textAlignment }}>
           Scroll the community and see others created funds and their
           performance. View and join other competitions
         </p>
@@ -349,35 +391,48 @@ const FourthSection = ({
 };
 
 const FifthSection = ({
-  largeScreen,
-  smallScreen,
-  veryLargeScreen,
+  textAlignment,
   photoHeight,
+  mobile,
+  tablet,
+  desktop,
+  laptop,
 }) => {
   return (
     <Grid
       item
       container
       xs={12}
-      style={{ justifyContent: "space-evenly", alignItems: "center" }}
+      style={{
+        justifyContent: tablet ? "space-evenly" : "space-evenly",
+        alignItems: "center",
+        flex: 1,
+      }}
     >
-      <Grid item xs={12} md={5}>
-        <h1>
+      <Grid item xs={12} md={4}>
+        <h1 style={{ ...textAlignment }}>
           <span className="boxed-span">Build</span> the Greatest Empire
         </h1>
-        <p>
+        <p style={{ ...textAlignment }}>
           You make(and lose) money by competing and your created funds
           performance.Will you come out on top?{" "}
         </p>
       </Grid>
-      <Grid item xs={12} md={6}>
+      <Grid
+        item
+        container
+        xs={12}
+        md={7}
+        justifyContent={tablet ? "center" : null}
+        //  style={{ backgroundColor: "red", justifyContent: "center" }}
+      >
         <img
-          src={empire}
+          src={tablet ? smallEmpire : empire}
           alt="me"
           style={{
             width: photoHeight,
             height: photoHeight,
-            top: smallScreen ? 10 : 80,
+            top: tablet ? 10 : 80,
             position: "relative",
             // borderRadius: 5,
             // filter: "brightness(80%)",
@@ -388,7 +443,7 @@ const FifthSection = ({
   );
 };
 
-const TopNav = ({ largeScreen, smallScreen, veryLargeScreen }) => {
+const TopNav = ({ mobile, tablet, desktop, laptop }) => {
   return (
     <Grid
       item
@@ -404,7 +459,7 @@ const TopNav = ({ largeScreen, smallScreen, veryLargeScreen }) => {
       <Grid
         item
         container
-        justifyContent={smallScreen ? "space-between" : "center"}
+        // justifyContent={smallScreen ? "space-between" : "center"}
         alignItems="center"
         direction={"row"}
         style={{
@@ -464,27 +519,20 @@ const TopNav = ({ largeScreen, smallScreen, veryLargeScreen }) => {
 const Footer = () => {
   return (
     <Grid item container xs={12}>
-      <Grid item container xs={12} justifyContent="center">
+      <Grid item container xs={12} justifyContent="center" alignItems="center">
         <h2>Follow Us</h2>
+        <div style={{ marginLeft: 8, zIndex: 100 }}>
+          <img
+            src={twitter}
+            className="social-icons"
+            alt="twitter profile"
+            onClick={() => window.open("https://www.twitter.com/Smarket_King/")}
+          />
+        </div>
       </Grid>
       <Grid item container xs={12}></Grid>
     </Grid>
   );
 };
 
-const styles = {
-  mainContainer: {
-    width: "100%",
-    height: 100,
-    display: "flex",
-    //   backgroundColor: '#3f0d12',
-    //  backgroundImage: 'linear-gradient(315deg, #3f0d12 0%, #a71d31 74%)',
-    backgroundColor: "rgba(250,250,50,1)",
-    // flex: 1,
-  },
-  link: {
-    textDecoration: "none",
-    color: "black",
-  },
-};
 export default App;
