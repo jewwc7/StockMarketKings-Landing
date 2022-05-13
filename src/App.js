@@ -97,7 +97,7 @@ function App() {
     largeTablet,
     textAlignment,
   };
-  const firstSectionHeight = mobile ? 800 : tablet ? 800 : 600;
+  const firstSectionHeight = mobile ? 800 : tablet ? 800 : 800;
   return (
     <Grid style={{ flex: 1 }}>
       <TopNav {...pageProps} />
