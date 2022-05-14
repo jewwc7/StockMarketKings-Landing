@@ -351,7 +351,7 @@ const FourthSection = ({
       style={{
         justifyContent: tablet ? "space-between" : "space-evenly",
         alignItems: "center",
-        flexDirection: "row-reverse",
+        // flexDirection: "row-reverse",
       }}
     >
       <Grid
