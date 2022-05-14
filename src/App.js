@@ -14,9 +14,10 @@ import {
   useMediaQuery,
   useTheme,
   createTheme,
+  Icon,
 } from "@mui/material";
-//import DehazeIcon from "@material-ui/icons/Dehaze";
-
+import DehazeIcon from "@mui/icons-material/Dehaze";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import sectionOne from "./Photos/sectionOne.svg";
 import appIcon from "./Photos/appIcon.svg";
 import fundChart from "./Photos/fundchart.svg";
@@ -150,7 +151,7 @@ function App() {
       >
         <FifthSection {...pageProps} />
       </Grid>
-      <Footer />
+      <Footer {...pageProps} />
     </Grid>
   );
 }
@@ -187,7 +188,7 @@ const FirstSection = ({ photoHeight, textAlignment, tablet }) => {
             <span style={{ fontWeight: "bold" }}>No</span> real money involved!
           </p>
           <div style={{ marginTop: 48 }}>
-            <Button variant="contained">Download App</Button>
+            <DownloadBtn />{" "}
           </div>
         </Grid>
       </Grid>
@@ -508,7 +509,7 @@ const TopNav = ({ mobile, tablet, desktop, laptop }) => {
             </Button>
           </Hidden>
           <Hidden mdUp>
-            <IconButton></IconButton>
+            <IconButton>DehazeIcon</IconButton>
           </Hidden>
         </Grid>
       </Hidden>
@@ -516,18 +517,89 @@ const TopNav = ({ mobile, tablet, desktop, laptop }) => {
   );
 };
 
-const Footer = () => {
+const DownloadBtn = ({
+  height,
+  width,
+  backgroundColor,
+  textColor,
+  iconColor,
+  iconSize,
+  noIcon,
+}) => {
   return (
-    <Grid item container xs={12}>
-      <Grid item container xs={12} justifyContent="center" alignItems="center">
-        <h2>Follow Us</h2>
-        <div style={{ marginLeft: 8, zIndex: 100 }}>
-          <img
-            src={twitter}
-            className="social-icons"
-            alt="twitter profile"
-            onClick={() => window.open("https://www.twitter.com/Smarket_King/")}
+    <Paper
+      style={{
+        width: width || 200,
+        height: height || 80,
+        paddingLeft: 8,
+        paddingRight: 8,
+        backgroundColor: backgroundColor || "#26437C",
+        cursor: "pointer",
+        borderRadius: 8,
+      }}
+      elevation={4}
+    >
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          width: "100%",
+          height: "100%",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <p
+          style={{
+            fontWeight: "bold",
+            fontSize: 18,
+            color: textColor || "#f5ffff",
+          }}
+        >
+          Download App
+        </p>
+        <div style={{ display: noIcon ? "none" : "flex" }}>
+          <ArrowForwardIcon
+            style={{
+              paddingLeft: 8,
+              fontSize: iconSize || 32,
+              color: iconColor || "#f5ffff",
+            }}
           />
+        </div>
+      </div>
+    </Paper>
+  );
+};
+
+const Footer = ({ tablet, mobile }) => {
+  const btnHieght = tablet ? "100%" : "100%";
+  return (
+    <Grid item container xs={12} style={{ height: 160 }} alignItems="center">
+      <Grid
+        item
+        container
+        xs={12}
+        md={8}
+        justifyContent="space-evenly"
+        alignItems="center"
+        flexDirection={mobile ? "column-reverse" : "row"}
+      >
+        <div style={{ marginRight: 16 }}>
+          <DownloadBtn height={btnHieght} width={btnHieght} noIcon />
+        </div>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <h2>Follow Us On</h2>
+          <div style={{ marginLeft: 8, zIndex: 100 }}>
+            <img
+              src={twitter}
+              className="social-icons"
+              alt="twitter profile"
+              onClick={() =>
+                window.open("https://www.twitter.com/Smarket_King/")
+              }
+            />
+          </div>
         </div>
       </Grid>
       <Grid item container xs={12}></Grid>
