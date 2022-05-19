@@ -526,6 +526,11 @@ const DownloadBtn = ({
   iconSize,
   noIcon,
 }) => {
+  function goToAppStore() {
+    window.open(
+      "https://apps.apple.com/us/app/stock-market-kings/id1618162738"
+    );
+  }
   return (
     <Paper
       style={{
@@ -538,6 +543,7 @@ const DownloadBtn = ({
         borderRadius: 8,
       }}
       elevation={4}
+      onClick={goToAppStore}
     >
       <div
         style={{
