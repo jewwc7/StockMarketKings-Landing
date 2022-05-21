@@ -24,3 +24,9 @@ h1 {
 .boxed-span {
   background-color: white;
 }
+
+.sticky-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
