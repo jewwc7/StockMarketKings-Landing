@@ -754,6 +754,10 @@ const Footer = ({ tablet, mobile }) => {
             />
           </div>
         </div>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <h2>Contact Us-</h2>
+          <p style={{ marginLeft: 4 }}>jewc7@gmail.com</p>
+        </div>
       </Grid>
       <Grid item container xs={12}></Grid>
     </Grid>
