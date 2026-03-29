@@ -1,0 +1,14 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "C5RC597RMS.com.self.yourStockMarketKings",
+        "paths": [
+          "/battle/*",
+          "/battle/join"
+        ]
+      }
+    ]
+  }
+}
