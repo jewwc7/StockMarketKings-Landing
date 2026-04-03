@@ -1,3 +1,7 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
 [[headers]]
   for = "/.well-known/apple-app-site-association"
   [headers.values]
@@ -7,3 +11,9 @@
   from = "/battle/*"
   to = "/"
   status = 302
+
+# SPA fallback (Vite output is a single index.html)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

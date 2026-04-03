@@ -1,25 +1,18 @@
-import React, { useState, useContext, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import "./App.css";
 import { useScrollPosition } from "@n8tb1t/use-scroll-position";
-import { SwitchTransition, CSSTransition } from "react-transition-group";
 import {
-  Grid,
   Button,
-  IconButton,
   Paper,
-  Hidden,
-  Container,
   useMediaQuery,
-  useTheme,
   createTheme,
-  Icon,
-  Slide,
+  ThemeProvider,
+  CssBaseline,
   Fade,
 } from "@mui/material";
-import DehazeIcon from "@mui/icons-material/Dehaze";
+import Grid from "@mui/material/Grid";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import sectionOne from "./Photos/sectionOne.svg";
 import appIcon from "./Photos/appIcon.svg";
 import fundChart from "./Photos/fundchart.svg";
 import compPhotos from "./Photos/compphoto.svg";
@@ -32,12 +25,6 @@ import smallCommunity from "./Photos/community-small.svg";
 import smallCompPhoto from "./Photos/compphoto-small.svg";
 import twitter from "./Photos/twitter.svg";
 
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  useNavigate,
-} from "react-router-dom";
 const theme = createTheme({
   breakpoints: {
     values: {
@@ -50,7 +37,31 @@ const theme = createTheme({
   },
 });
 
-function App() {
+function sectionImageStyle(
+  photoHeight,
+  mobile,
+  tablet,
+  topWhenTablet,
+  topWhenDesktop
+) {
+  const top = tablet ? topWhenTablet : topWhenDesktop;
+  const base = { position: "relative", top };
+  if (mobile) {
+    return {
+      width: "100%",
+      maxWidth: photoHeight,
+      height: "auto",
+      ...base,
+    };
+  }
+  return {
+    width: photoHeight,
+    height: photoHeight,
+    ...base,
+  };
+}
+
+function AppContent() {
   const mobile = useMediaQuery(theme.breakpoints.down("tablet"), {}); //xs, sm
   const tablet = useMediaQuery(theme.breakpoints.down("largeTablet"), {}); //md
   const largeTablet = useMediaQuery(theme.breakpoints.down("laptop"), {}); //md
@@ -62,7 +73,6 @@ function App() {
   const padding = addPadding();
   const textAlignment = getTextAlignment();
   function addPadding() {
-    console.log(laptop);
     if (mobile)
       return {
         paddingLeft: 16,
@@ -80,17 +90,20 @@ function App() {
 
   function getTextAlignment() {
     if (mobile) {
-      return {}; //stay left aligned on mobile
+      return {};
     }
     if (tablet) {
-      //center on tablet
       return {
         textAlign: "center",
       };
-    } else return {};
+    }
+    return {};
   }
 
-  const firstSectionHeight = mobile ? 800 : tablet ? 800 : 800;
+  const firstSectionBlock =
+    mobile || tablet
+      ? { minHeight: "auto", paddingBottom: 24 }
+      : { height: 800 };
 
   /////////////////////////////////////////////////////////////////////////////////////////
   const [inViewSecondSec, setInViewSecondSec] = useState(false);
@@ -173,8 +186,8 @@ function App() {
         xs={12}
         style={{
           backgroundColor: "white",
-          height: firstSectionHeight,
           paddingTop: 32,
+          ...firstSectionBlock,
         }}
       >
         <FirstSection {...pageProps} />
@@ -224,15 +237,13 @@ function App() {
   );
 }
 
-const FirstSection = ({ photoHeight, textAlignment, tablet }) => {
+const FirstSection = ({ photoHeight, tablet, mobile }) => {
   return (
     <Grid
       item
       container
       xs={12}
       style={{
-        //   justifyContent: "space-evenly",
-        //   alignItems: "center",
         position: "relative",
         flex: 1,
       }}
@@ -242,18 +253,27 @@ const FirstSection = ({ photoHeight, textAlignment, tablet }) => {
           <h1
             style={{
               lineHeight: 1.2,
+              textAlign: "center",
             }}
           >
-            Learn the Stock Market <br></br>Build your Kingdom
+            <span className="boxed-span">Compete </span> with friends
+            <br />
+            while <span className="boxed-span">learning </span> about the stock
+            market.
           </h1>
           <p
             style={{
               marginTop: 24,
+              textAlign: "center",
             }}
           >
-            Learn about stocks, test your strategies and compete with friends in
-            this all in one stock market social app.{" "}
-            <span style={{ fontWeight: "bold" }}>No</span> real money involved!
+            A social stock app: challenge friends, test your strategies, and
+            learn how the market works.
+            <span style={{ fontWeight: "bold", textAlign: "center" }}>
+              {" "}
+              No
+            </span>{" "}
+            real money involved!
           </p>
           <div style={{ marginTop: 48 }}>
             <DownloadBtn />{" "}
@@ -280,11 +300,16 @@ const FirstSection = ({ photoHeight, textAlignment, tablet }) => {
         >
           <img
             src={fundChart}
-            alt="me"
-            style={{
-              width: photoHeight,
-              height: photoHeight,
-            }}
+            alt="Stock market chart illustration"
+            style={
+              mobile
+                ? {
+                    width: "100%",
+                    maxWidth: photoHeight,
+                    height: "auto",
+                  }
+                : { width: photoHeight, height: photoHeight }
+            }
           />
         </Grid>
       </Grid>
@@ -311,9 +336,7 @@ const SecondSection = ({
       style={{
         justifyContent: tablet ? "space-between" : "space-evenly",
         alignItems: "center",
-        //   position: "relative",
         flex: 1,
-        //   flexDirection: "row-reverse",
       }}
     >
       <Fade
@@ -330,13 +353,8 @@ const SecondSection = ({
         >
           <img
             src={tablet ? smallFunds : funds}
-            alt="me"
-            style={{
-              width: photoHeight,
-              height: photoHeight,
-              top: tablet ? 10 : 80,
-              position: "relative",
-            }}
+            alt="Funds and strategies"
+            style={sectionImageStyle(photoHeight, mobile, tablet, 10, 80)}
           />
         </Grid>
       </Fade>
@@ -404,15 +422,8 @@ const ThirdSection = ({
         >
           <img
             src={tablet ? smallCompPhoto : compPhotos}
-            alt="me"
-            style={{
-              width: photoHeight,
-              height: photoHeight,
-              top: tablet ? 10 : 80,
-              position: "relative",
-              // borderRadius: 5,
-              // filter: "brightness(80%)",
-            }}
+            alt="Competitions"
+            style={sectionImageStyle(photoHeight, mobile, tablet, 10, 80)}
           />
         </Grid>
       </Fade>
@@ -438,7 +449,6 @@ const FourthSection = ({
       style={{
         justifyContent: tablet ? "space-between" : "space-evenly",
         alignItems: "center",
-        // flexDirection: "row-reverse",
       }}
     >
       <Fade
@@ -455,15 +465,8 @@ const FourthSection = ({
         >
           <img
             src={tablet ? smallCommunity : community}
-            alt="me"
-            style={{
-              width: photoHeight,
-              height: photoHeight,
-              top: tablet ? 0 : 80,
-              position: "relative",
-              // borderRadius: 5,
-              // filter: "brightness(80%)",
-            }}
+            alt="Community"
+            style={sectionImageStyle(photoHeight, mobile, tablet, 0, 80)}
           />
         </Grid>
       </Fade>
@@ -528,15 +531,8 @@ const FifthSection = ({
         >
           <img
             src={tablet ? smallEmpire : empire}
-            alt="me"
-            style={{
-              width: photoHeight,
-              height: photoHeight,
-              top: tablet ? 10 : 80,
-              position: "relative",
-              // borderRadius: 5,
-              // filter: "brightness(80%)",
-            }}
+            alt="Build your empire"
+            style={sectionImageStyle(photoHeight, mobile, tablet, 10, 80)}
           />
         </Grid>
       </Fade>
@@ -545,20 +541,20 @@ const FifthSection = ({
 };
 
 const TopNav = ({ mobile, tablet, desktop, laptop }) => {
-  const [stickyClass, setStickyClass] = useState("");
+  // const [stickyClass, setStickyClass] = useState("");
 
-  useEffect(() => {
-    window.addEventListener("scroll", stickNavbar);
-    return () => window.removeEventListener("scroll", stickNavbar);
-  }, []);
+  // useEffect(() => {
+  //   window.addEventListener("scroll", stickNavbar);
+  //   return () => window.removeEventListener("scroll", stickNavbar);
+  // }, []);
 
-  function stickNavbar() {
-    if (window !== undefined) {
-      let windowHeight = window.scrollY;
-      //use a percent of the windowheight so can work on mobile
-      windowHeight > 150 ? setStickyClass("sticky-nav") : setStickyClass("");
-    }
-  }
+  // function stickNavbar() {
+  //   if (window !== undefined) {
+  //     let windowHeight = window.scrollY;
+  //     //use a percent of the windowheight so can work on mobile
+  //     windowHeight > 150 ? setStickyClass("sticky-nav") : setStickyClass("");
+  //   }
+  // }
 
   function goToAppStore() {
     window.open(
@@ -566,14 +562,14 @@ const TopNav = ({ mobile, tablet, desktop, laptop }) => {
     );
   }
 
-  function scrollToSection(fromTopDistance) {
-    setTimeout(() => {
-      window.scrollTo({
-        top: fromTopDistance || 750,
-        behavior: "smooth",
-      });
-    }, 500);
-  }
+  // function scrollToSection(fromTopDistance) {
+  //   setTimeout(() => {
+  //     window.scrollTo({
+  //       top: fromTopDistance || 750,
+  //       behavior: "smooth",
+  //     });
+  //   }, 500);
+  // }
   return (
     <Grid
       item
@@ -581,25 +577,20 @@ const TopNav = ({ mobile, tablet, desktop, laptop }) => {
       style={{
         height: 80,
         alignItems: "center",
-        //  borderBottom: "1.5px solid ",
         paddingLeft: 8,
         paddingRight: 8,
-        //  position: "sticky",
         zIndex: 100,
       }}
-      className={`${stickyClass}`}
+      //     className={`${stickyClass}`}
     >
       <Grid
         item
         container
-        // justifyContent={smallScreen ? "space-between" : "center"}
         alignItems="center"
         direction={"row"}
         style={{
           height: "80%",
-          //  paddingLeft: 8,
           cursor: "pointer",
-          // backgroundColor: "blue",
         }}
         xs={12}
         md={6}
@@ -615,51 +606,6 @@ const TopNav = ({ mobile, tablet, desktop, laptop }) => {
         <img src={appIcon} alt="Stock Logo" style={{ height: "100%" }} />
         <h2 style={{ marginLeft: 8 }}>Stock Market Kings</h2>
       </Grid>
-      <Hidden mdDown>
-        <Grid
-          item
-          style={{
-            paddingRight: "5%",
-            justifyContent: "flex-end",
-            display: "flex",
-          }}
-          xs={6}
-        >
-          <Hidden smDown>
-            <Button onClick={() => scrollToSection(800)}>
-              <p className="nav-btns">Invest</p>
-            </Button>
-            <Button onClick={() => scrollToSection(1600)}>
-              <p className="nav-btns">Compete</p>
-            </Button>
-            <Button onClick={() => scrollToSection(2400)}>
-              <p className="nav-btns">Build</p>
-            </Button>
-            <Button className="nav-btns">
-              <p className="nav-btns" onClick={goToAppStore}>
-                Download
-              </p>
-            </Button>
-            <Button
-              className="nav-btns"
-              onClick={() => {
-                setTimeout(() => {
-                  window.scrollTo({
-                    //this is how you scroll to bottom of page, used timeout so the new pages coordinates can be used(w/o timeout will scroll as far as prior page went down)
-                    top: document.body.scrollHeight,
-                    behavior: "smooth",
-                  });
-                }, 500);
-              }}
-            >
-              <p className="nav-btns">Follow Us</p>
-            </Button>
-          </Hidden>
-          <Hidden mdUp>
-            <IconButton>DehazeIcon</IconButton>
-          </Hidden>
-        </Grid>
-      </Hidden>
     </Grid>
   );
 };
@@ -763,5 +709,14 @@ const Footer = ({ tablet, mobile }) => {
     </Grid>
   );
 };
+
+function App() {
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <AppContent />
+    </ThemeProvider>
+  );
+}
 
 export default App;
