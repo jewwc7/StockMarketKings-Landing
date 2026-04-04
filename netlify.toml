@@ -2,6 +2,11 @@
   command = "npm run build"
   publish = "dist"
 
+# Vite 6+ needs modern Node (Web Crypto on globalThis). Netlify’s old default breaks with:
+# TypeError: crypto.getRandomValues is not a function
+[build.environment]
+  NODE_VERSION = "20"
+
 [[headers]]
   for = "/.well-known/apple-app-site-association"
   [headers.values]
