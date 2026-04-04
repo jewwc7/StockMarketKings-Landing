@@ -1,31 +1,37 @@
-import React, { useState, useEffect, useRef } from "react";
+import React from "react";
 
 import "./App.css";
-import { useScrollPosition } from "@n8tb1t/use-scroll-position";
 import {
-  Button,
-  Paper,
+  Box,
   useMediaQuery,
   createTheme,
   ThemeProvider,
   CssBaseline,
-  Fade,
 } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import appIcon from "./Photos/appIcon.svg";
-import fundChart from "./Photos/fundchart.svg";
-import compPhotos from "./Photos/compphoto.svg";
-import community from "./Photos/community.svg";
-import empire from "./Photos/empire.svg";
-import funds from "./Photos/funds.svg";
-import smallFunds from "./Photos/funds-small.svg";
-import smallEmpire from "./Photos/empire-small.svg";
-import smallCommunity from "./Photos/community-small.svg";
-import smallCompPhoto from "./Photos/compphoto-small.svg";
+import appIcon from "./Photos/app-icon.png";
+import portfolio from "./Photos/portfolio.jpeg";
+
 import twitter from "./Photos/twitter.svg";
 
+/** Official App Store listing — badge asset from Apple (white badge = dark page backgrounds). */
+const APP_STORE_URL =
+  "https://apps.apple.com/us/app/stock-market-kings/id1618162738";
+const APP_STORE_BADGE_WHITE =
+  "https://tools.applemediaservices.com/api/badges/download-on-the-app-store/white/en-us?size=250x83";
+
 const theme = createTheme({
+  palette: {
+    mode: "dark",
+    background: {
+      default: "#000000",
+      paper: "#141414",
+    },
+    text: {
+      primary: "#ffffff",
+      secondary: "rgba(255, 255, 255, 0.7)",
+    },
+  },
   breakpoints: {
     values: {
       mobile: 0,
@@ -36,30 +42,6 @@ const theme = createTheme({
     },
   },
 });
-
-function sectionImageStyle(
-  photoHeight,
-  mobile,
-  tablet,
-  topWhenTablet,
-  topWhenDesktop
-) {
-  const top = tablet ? topWhenTablet : topWhenDesktop;
-  const base = { position: "relative", top };
-  if (mobile) {
-    return {
-      width: "100%",
-      maxWidth: photoHeight,
-      height: "auto",
-      ...base,
-    };
-  }
-  return {
-    width: photoHeight,
-    height: photoHeight,
-    ...base,
-  };
-}
 
 function AppContent() {
   const mobile = useMediaQuery(theme.breakpoints.down("tablet"), {}); //xs, sm
@@ -105,63 +87,6 @@ function AppContent() {
       ? { minHeight: "auto", paddingBottom: 24 }
       : { height: 800 };
 
-  /////////////////////////////////////////////////////////////////////////////////////////
-  const [inViewSecondSec, setInViewSecondSec] = useState(false);
-  const [inViewThirdSec, setInViewThirdSec] = useState(false);
-  const [inViewFourthSec, setInViewFourthSec] = useState(false);
-  const [inViewFifthSec, setInViewFifthSec] = useState(false); //controls transition in
-
-  const secondSectionRef = useRef();
-  const thirdSectionRef = useRef();
-  const fourthSectionRef = useRef();
-  const fifthSectionRef = useRef();
-
-  //2nd sec
-  useScrollPosition(({ prevPos, currPos }) => {
-    const postiveCurrPosy = Math.abs(currPos.y); //turns number postive, scroll postion is negative number
-    const { offsetTop } = secondSectionRef.current; //where the element ends with respect to viewport(bottom of element)
-    const topOfEl = offsetTop - postiveCurrPosy - 200; //this is how to get top of element (the 100 is optional but makes whatever you want happen 100px earlier )
-    // console.log(secondSectionRef.current.getBoundingClientRect()); //this gives the top position of the element with respect to current scroll postion.
-    if (postiveCurrPosy >= topOfEl) {
-      setInViewSecondSec(true); //set to to true to see transition
-    }
-  });
-  //3rd sec
-  useScrollPosition(({ prevPos, currPos }) => {
-    const postiveCurrPosy = Math.abs(currPos.y); //turns number postive, scroll postion is negative number
-    const { offsetTop } = thirdSectionRef.current; //where the element ends with respect to viewport(bottom of element)
-    const topOfEl = offsetTop - postiveCurrPosy + 900; //this is how to get top of element (the 100 is optional but makes whatever you want happen 100px earlier )
-    //  console.log({ offsetTop, postiveCurrPosy, topOfEl });
-
-    if (postiveCurrPosy >= topOfEl) {
-      setInViewThirdSec(true); //set to to true to see transition
-    }
-  });
-  //4th sec
-  useScrollPosition(({ prevPos, currPos }) => {
-    const postiveCurrPosy = Math.abs(currPos.y); //turns number postive, scroll postion is negative number
-    const { offsetTop } = fourthSectionRef.current; //where the element ends with respect to viewport(bottom of element)
-    const topOfEl = offsetTop - postiveCurrPosy + 1200; //this is how to get top of element (the 100 is optional but makes whatever you want happen 100px earlier )
-    if (postiveCurrPosy >= topOfEl) {
-      setInViewFourthSec(true); //set to to true to see transition
-    }
-  });
-  //5th sec
-  useScrollPosition(({ prevPos, currPos }) => {
-    const postiveCurrPosy = Math.abs(currPos.y); //turns number postive, scroll postion is negative number
-    const { offsetTop } = fifthSectionRef.current; //where the element ends with respect to viewport(bottom of element)
-    const topOfEl = Math.abs(offsetTop - postiveCurrPosy) + 1800; //this is how to get top of element (the 100 is optional but makes whatever you want happen 100px earlier )
-    //console.log({ offsetTop, postiveCurrPosy, topOfEl });
-    if (postiveCurrPosy >= topOfEl) {
-      setInViewFifthSec(true); //set to to true to see transition
-    }
-  });
-
-  const fadeTimeout = {
-    appear: 0,
-    enter: 300,
-  };
-
   const pageProps = {
     photoHeight,
     mobile,
@@ -170,14 +95,9 @@ function AppContent() {
     laptop,
     largeTablet,
     textAlignment,
-    inViewSecondSec,
-    inViewThirdSec,
-    inViewFourthSec,
-    inViewFifthSec,
-    fadeTimeout,
   };
   return (
-    <Grid style={{ flex: 1, position: "relative" }}>
+    <Grid sx={{ flex: 1, position: "relative", bgcolor: "background.default" }}>
       <TopNav {...pageProps} />
 
       <Grid
@@ -185,357 +105,98 @@ function AppContent() {
         container
         xs={12}
         style={{
-          backgroundColor: "white",
-          paddingTop: 32,
+          backgroundColor: "#000000",
+          paddingTop: 0,
           ...firstSectionBlock,
         }}
       >
         <FirstSection {...pageProps} />
       </Grid>
-      <Grid
-        item
-        container
-        xs={12}
-        style={{ backgroundColor: "#E9ECF2", paddingTop: 32, ...padding }}
-        ref={secondSectionRef}
-      >
-        <SecondSection {...pageProps} />
-      </Grid>
-      <Grid
-        item
-        container
-        xs={12}
-        style={{ backgroundColor: "white", paddingTop: 32, ...padding }}
-        ref={thirdSectionRef}
-      >
-        <ThirdSection {...pageProps} />
-      </Grid>
-      <Grid
-        item
-        container
-        xs={12}
-        style={{
-          backgroundColor: "#26437C",
-          paddingTop: 32,
-          ...padding,
-        }}
-        ref={fourthSectionRef}
-      >
-        <FourthSection {...pageProps} />
-      </Grid>
-      <Grid
-        item
-        container
-        xs={12}
-        style={{ backgroundColor: "#E9ECF2", paddingTop: 32, ...padding }}
-        ref={fifthSectionRef}
-      >
-        <FifthSection {...pageProps} />
-      </Grid>
+
       <Footer {...pageProps} />
     </Grid>
   );
 }
 
-const FirstSection = ({ photoHeight, tablet, mobile }) => {
+const PORTFOLIO_SCREENSHOT_LABEL =
+  "Screenshot of the Stock Market Kings app showing a portfolio view with stock holdings, tickers, and performance figures.";
+
+const FirstSection = ({ mobile }) => {
+  const heroMinHeight = mobile ? 520 : 640;
+
   return (
     <Grid
       item
       container
       xs={12}
-      style={{
+      component="section"
+      aria-label="Introduction"
+      sx={{
         position: "relative",
         flex: 1,
+        overflow: "hidden",
+        minHeight: heroMinHeight,
+        alignItems: "center",
       }}
     >
-      <Grid xs={12} md={6} container item alignItems={"center"}>
-        <Grid item style={{ padding: 24 }}>
-          <h1
-            style={{
-              lineHeight: 1.2,
-              textAlign: "center",
-            }}
-          >
-            <span className="boxed-span">Compete </span> with friends
-            <br />
-            while <span className="boxed-span">learning </span> about the stock
-            market.
-          </h1>
-          <p
-            style={{
-              marginTop: 24,
-              textAlign: "center",
-            }}
-          >
-            A social stock app: challenge friends, test your strategies, and
-            learn how the market works.
-            <span style={{ fontWeight: "bold", textAlign: "center" }}>
-              {" "}
-              No
-            </span>{" "}
-            real money involved!
-          </p>
-          <div style={{ marginTop: 48 }}>
-            <DownloadBtn />{" "}
-          </div>
-        </Grid>
-      </Grid>
+      {/* Decorative background: name it for screen readers with role + aria-label */}
+      <Box
+        sx={{
+          position: "absolute",
+          inset: 0,
+          zIndex: 0,
+          backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.85) 100%), url(${portfolio})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center center",
+        }}
+        role="img"
+        aria-label={PORTFOLIO_SCREENSHOT_LABEL}
+      />
       <Grid
-        item
         container
+        item
         xs={12}
-        md={6}
-        style={{
-          //   justifyContent: "flex-end",
-          height: "100%",
-          width: "100%",
+        sx={{
+          position: "relative",
+          zIndex: 1,
+          py: 4,
+          px: 2,
+          justifyContent: "center",
         }}
       >
-        <Grid
-          item
-          container
-          xs={12}
-          justifyContent={tablet ? "center" : null}
-          style={{ height: "100%", width: "100%" }}
-        >
-          <img
-            src={fundChart}
-            alt="Stock market chart illustration"
-            style={
-              mobile
-                ? {
-                    width: "100%",
-                    maxWidth: photoHeight,
-                    height: "auto",
-                  }
-                : { width: photoHeight, height: photoHeight }
-            }
-          />
+        <Grid item xs={12} md={10} lg={8} sx={{ px: { xs: 1, sm: 2 }, py: 0 }}>
+          <Box sx={{ p: 3 }}>
+            <h1
+              style={{
+                lineHeight: 1.2,
+                textAlign: "center",
+              }}
+            >
+              <span className="boxed-span">Compete </span> with friends
+              <br />
+              while <span className="boxed-span">learning </span> about the
+              stock market.
+            </h1>
+            <h1
+              style={{
+                marginTop: 24,
+                textAlign: "center",
+              }}
+            >
+              <span className="boxed-span">Risk Free!</span>
+            </h1>
+            <Box
+              sx={{
+                mt: 6,
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <StoreBadges />
+            </Box>
+          </Box>
         </Grid>
       </Grid>
-    </Grid>
-  );
-};
-
-const SecondSection = ({
-  photoHeight,
-  mobile,
-  largeTablet,
-  tablet,
-  desktop,
-  laptop,
-  textAlignment,
-  inViewSecondSec,
-  fadeTimeout,
-}) => {
-  return (
-    <Grid
-      item
-      container
-      xs={12}
-      style={{
-        justifyContent: tablet ? "space-between" : "space-evenly",
-        alignItems: "center",
-        flex: 1,
-      }}
-    >
-      <Fade
-        in={inViewSecondSec}
-        timeout={fadeTimeout}
-        easing={{ enter: "cubic-bezier(0.37, 0.36, 0.67, 1.01)" }}
-      >
-        <Grid
-          item
-          container
-          xs={12}
-          md={5}
-          justifyContent={tablet ? "center" : null}
-        >
-          <img
-            src={tablet ? smallFunds : funds}
-            alt="Funds and strategies"
-            style={sectionImageStyle(photoHeight, mobile, tablet, 10, 80)}
-          />
-        </Grid>
-      </Fade>
-      <Grid item xs={12} md={5}>
-        <h1 style={{ ...textAlignment }}>
-          <span className="boxed-span">Create </span>Funds and{" "}
-          <span className="boxed-span">Test</span> Strategies
-        </h1>
-        <p style={{ ...textAlignment }}>
-          Based on real stock market data, you’ll create funds(basket of stocks)
-          and track their performance over time.
-        </p>
-      </Grid>
-    </Grid>
-  );
-};
-
-const ThirdSection = ({
-  textAlignment,
-  photoHeight,
-  mobile,
-  tablet,
-  desktop,
-  laptop,
-  inViewThirdSec,
-  fadeTimeout,
-}) => {
-  return (
-    <Grid
-      item
-      container
-      xs={12}
-      style={{
-        justifyContent: tablet ? "space-evenly" : "space-evenly",
-        alignItems: "center",
-        flex: 1,
-      }}
-    >
-      <Grid item xs={12} md={4}>
-        <h1 style={{ ...textAlignment }}>
-          Start{" "}
-          <span
-            className="boxed-span"
-            style={{ color: "white", backgroundColor: "#151515" }}
-          >
-            Competitions
-          </span>
-        </h1>
-        <p style={{ ...textAlignment }}>
-          Place your created funds up against other users. You decide the
-          amount, competitors allowed, max stocks allowed and more!
-        </p>
-      </Grid>
-      <Fade
-        in={inViewThirdSec}
-        timeout={fadeTimeout}
-        easing={{ enter: "cubic-bezier(0.37, 0.36, 0.67, 1.01)" }}
-      >
-        <Grid
-          item
-          container
-          xs={12}
-          md={7}
-          justifyContent={tablet ? "center" : null}
-        >
-          <img
-            src={tablet ? smallCompPhoto : compPhotos}
-            alt="Competitions"
-            style={sectionImageStyle(photoHeight, mobile, tablet, 10, 80)}
-          />
-        </Grid>
-      </Fade>
-    </Grid>
-  );
-};
-
-const FourthSection = ({
-  textAlignment,
-  photoHeight,
-  mobile,
-  tablet,
-  desktop,
-  laptop,
-  inViewFourthSec,
-  fadeTimeout,
-}) => {
-  return (
-    <Grid
-      item
-      container
-      xs={12}
-      style={{
-        justifyContent: tablet ? "space-between" : "space-evenly",
-        alignItems: "center",
-      }}
-    >
-      <Fade
-        in={inViewFourthSec}
-        timeout={fadeTimeout}
-        easing={{ enter: "cubic-bezier(0.37, 0.36, 0.67, 1.01)" }}
-      >
-        <Grid
-          item
-          container
-          xs={12}
-          md={5}
-          justifyContent={tablet ? "center" : null}
-        >
-          <img
-            src={tablet ? smallCommunity : community}
-            alt="Community"
-            style={sectionImageStyle(photoHeight, mobile, tablet, 0, 80)}
-          />
-        </Grid>
-      </Fade>
-      <Grid item xs={12} md={5}>
-        <h1 style={{ color: "white", ...textAlignment }}>
-          Browse the{" "}
-          <span className="boxed-span" style={{ backgroundColor: "#151515" }}>
-            Community
-          </span>
-        </h1>
-        <p style={{ color: "white", ...textAlignment }}>
-          Scroll the community and see others created funds and their
-          performance. View and join other competitions
-        </p>
-      </Grid>
-    </Grid>
-  );
-};
-
-const FifthSection = ({
-  textAlignment,
-  photoHeight,
-  mobile,
-  tablet,
-  desktop,
-  laptop,
-  inViewFifthSec,
-  fadeTimeout,
-}) => {
-  return (
-    <Grid
-      item
-      container
-      xs={12}
-      style={{
-        justifyContent: tablet ? "space-evenly" : "space-evenly",
-        alignItems: "center",
-        flex: 1,
-      }}
-    >
-      <Grid item xs={12} md={4}>
-        <h1 style={{ ...textAlignment }}>
-          <span className="boxed-span">Build</span> the Greatest Empire
-        </h1>
-        <p style={{ ...textAlignment }}>
-          You make(and lose) money by competing and your created funds
-          performance.Will you come out on top?{" "}
-        </p>
-      </Grid>
-      <Fade
-        in={inViewFifthSec}
-        timeout={fadeTimeout}
-        easing={{ enter: "cubic-bezier(0.37, 0.36, 0.67, 1.01)" }}
-      >
-        <Grid
-          item
-          container
-          xs={12}
-          md={7}
-          justifyContent={tablet ? "center" : null}
-          //  style={{ backgroundColor: "red", justifyContent: "center" }}
-        >
-          <img
-            src={tablet ? smallEmpire : empire}
-            alt="Build your empire"
-            style={sectionImageStyle(photoHeight, mobile, tablet, 10, 80)}
-          />
-        </Grid>
-      </Fade>
     </Grid>
   );
 };
@@ -603,109 +264,164 @@ const TopNav = ({ mobile, tablet, desktop, laptop }) => {
           }, 500);
         }}
       >
-        <img src={appIcon} alt="Stock Logo" style={{ height: "100%" }} />
-        <h2 style={{ marginLeft: 8 }}>Stock Market Kings</h2>
+        <img src={appIcon} alt="Stock Logo" style={{ height: "60%" }} />
+        <h2 style={{ marginLeft: 8 }}>Stock Market King</h2>
       </Grid>
     </Grid>
   );
 };
 
-const DownloadBtn = ({
-  height,
-  width,
-  backgroundColor,
-  textColor,
-  iconColor,
-  iconSize,
-  noIcon,
-}) => {
-  function goToAppStore() {
-    window.open(
-      "https://apps.apple.com/us/app/stock-market-kings/id1618162738"
-    );
-  }
+function StoreBadges() {
   return (
-    <Paper
-      style={{
-        width: width || 200,
-        height: height || 80,
-        paddingLeft: 8,
-        paddingRight: 8,
-        backgroundColor: backgroundColor || "#26437C",
-        cursor: "pointer",
-        borderRadius: 8,
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: { xs: "row", sm: "row" },
+        alignItems: "center",
+        justifyContent: "center",
+        gap: { xs: 2, sm: 3 },
+        rowGap: { xs: 21, sm: 31 },
+        flexWrap: "wrap",
       }}
-      elevation={4}
-      onClick={goToAppStore}
     >
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          width: "100%",
-          height: "100%",
+      <Box
+        component="a"
+        href={APP_STORE_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        sx={{
+          display: "inline-block",
+          lineHeight: 0,
+          "&:focus-visible": {
+            outline: "2px solid #ffffff",
+            outlineOffset: 4,
+            borderRadius: 1,
+          },
+        }}
+        aria-label="Download Stock Market Kings free on the App Store"
+      >
+        <Box
+          component="img"
+          src={APP_STORE_BADGE_WHITE}
+          alt=""
+          sx={{
+            height: { xs: 44, sm: 50 },
+            width: "auto",
+            display: "block",
+          }}
+        />
+      </Box>
+      {/* <Box
+        role="status"
+        aria-label="Google Play version is coming soon."
+        sx={{
+          display: "inline-flex",
           alignItems: "center",
           justifyContent: "center",
+          minHeight: { xs: 44, sm: 50 },
+          px: 2.5,
+          py: 1,
+          borderRadius: 1,
+          border: "1px solid rgba(255,255,255,0.28)",
+          bgcolor: "rgba(255,255,255,0.08)",
+          color: "rgba(255,255,255,0.78)",
+          fontSize: { xs: "0.875rem", sm: "0.9375rem" },
+          fontWeight: 600,
+          textAlign: "center",
+          maxWidth: 280,
+          marginTop: { xs: 22, sm: 50 },
+          marginLeft: { xs: 10, sm: 32 },
         }}
       >
-        <p
-          style={{
-            fontWeight: "bold",
-            fontSize: 18,
-            color: textColor || "#f5ffff",
-          }}
-        >
-          Download App
-        </p>
-        <div style={{ display: noIcon ? "none" : "flex" }}>
-          <ArrowForwardIcon
-            style={{
-              paddingLeft: 8,
-              fontSize: iconSize || 32,
-              color: iconColor || "#f5ffff",
-            }}
-          />
-        </div>
-      </div>
-    </Paper>
+        Google Play — Coming soon
+      </Box> */}
+    </Box>
   );
-};
+}
 
-const Footer = ({ tablet, mobile }) => {
-  const btnHieght = tablet ? "100%" : "100%";
+const Footer = ({ mobile }) => {
   return (
-    <Grid item container xs={12} style={{ height: 160 }} alignItems="center">
+    <Grid
+      item
+      container
+      xs={12}
+      component="footer"
+      sx={{
+        justifyContent: "center",
+        alignItems: "center",
+        py: { xs: 4, md: 3 },
+        px: 2,
+        minHeight: { xs: "auto", md: 160 },
+        paddingBottom: 10,
+        // borderTop: ".5px solid rgba(255,255,255,0.28)",
+      }}
+    >
       <Grid
         item
         container
         xs={12}
-        md={8}
-        justifyContent="space-evenly"
-        alignItems="center"
-        flexDirection={mobile ? "column-reverse" : "row"}
+        md={10}
+        sx={{
+          flexDirection: mobile ? "column" : "row",
+          justifyContent: mobile ? "center" : "space-evenly",
+          alignItems: "center",
+          rowGap: mobile ? 3 : 0,
+          columnGap: mobile ? 0 : 2,
+          textAlign: mobile ? "center" : "left",
+        }}
       >
-        <div style={{ marginRight: 16 }}>
-          <DownloadBtn height={btnHieght} width={btnHieght} noIcon />
-        </div>
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <h2>Follow Us On</h2>
-          <div style={{ marginLeft: 8, zIndex: 100 }}>
-            <img
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: mobile ? "center" : "flex-start",
+            flexWrap: "wrap",
+            gap: 1,
+          }}
+        >
+          <h2 style={{ margin: 0 }}>Follow Us On</h2>
+          <Box
+            component="a"
+            href="https://www.twitter.com/Smarket_King/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Follow Stock Market Kings on X (Twitter)"
+            sx={{ display: "inline-flex", lineHeight: 0, ml: mobile ? 0 : 1 }}
+          >
+            <Box
+              component="img"
               src={twitter}
               className="social-icons"
-              alt="twitter profile"
-              onClick={() =>
-                window.open("https://www.twitter.com/Smarket_King/")
-              }
+              alt=""
+              sx={{ height: 32, width: "auto", display: "block" }}
             />
-          </div>
-        </div>
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <h2>Contact Us-</h2>
-          <p style={{ marginLeft: 4 }}>jewc7@gmail.com</p>
-        </div>
+          </Box>
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: mobile ? "center" : "flex-start",
+            flexWrap: "wrap",
+            gap: 0.5,
+          }}
+        >
+          <h2 style={{ margin: 0 }}>Contact Us-</h2>
+          <Box
+            component="a"
+            href="mailto:smarketkings@gmail.com"
+            sx={{
+              color: "inherit",
+              textDecoration: "underline",
+              ml: mobile ? 0 : 0.5,
+              fontSize: 24,
+              wordBreak: "break-word",
+            }}
+          >
+            smarketkings@gmail.com
+          </Box>
+        </Box>
       </Grid>
-      <Grid item container xs={12}></Grid>
     </Grid>
   );
 };
