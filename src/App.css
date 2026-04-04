@@ -3,18 +3,23 @@
 }
 p {
   font-size: 24px;
-  color: #151515;
+  color: #eeedee;
   line-height: 1.5;
   font-weight: 400;
 }
 
 h1 {
-  text-shadow: 0px 0px 40px rgba(0, 0, 0, 0.25);
-  font-size: 40;
+  color: #eeedee;
+  text-shadow: 0 0 32px rgba(255, 255, 255, 0.12);
+  font-size: 40px;
+}
+
+h2 {
+  color: #eeedee;
 }
 
 .nav-btns {
-  color: rgb(0, 0, 0);
+  color: #eeedee;
   font-weight: 600;
   font-size: 16px;
 }
@@ -22,7 +27,20 @@ h1 {
   cursor: pointer;
 }
 .boxed-span {
-  background-color: white;
+  background-color: #eeedee;
+  color: #151515;
+  padding: 4px 8px;
+  border-radius: 8px;
+}
+
+.boxed-span-outline {
+  border: 1px solid #eeedee;
+  color: #eeedee;
+  padding: 4px 8px;
+  border-radius: 8px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #0072ed;
 }
 
 .sticky-nav {
