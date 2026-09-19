@@ -119,7 +119,7 @@ function AppContent() {
 }
 
 const PORTFOLIO_SCREENSHOT_LABEL =
-  "Screenshot of the Stock Market Kings app showing a portfolio view with stock holdings, tickers, and performance figures.";
+  "Screenshot of the Paper Trading Simulator app showing a portfolio view with stock holdings, tickers, and performance figures.";
 
 const FirstSection = ({ mobile }) => {
   const heroMinHeight = mobile ? 520 : 640;
@@ -265,7 +265,7 @@ const TopNav = ({ mobile, tablet, desktop, laptop }) => {
         }}
       >
         <img src={appIcon} alt="Stock Logo" style={{ height: "60%" }} />
-        <h2 style={{ marginLeft: 8 }}>Stock Market King</h2>
+        <h2 style={{ marginLeft: 8 }}>Paper Trading Simulator</h2>
       </Grid>
     </Grid>
   );
@@ -298,7 +298,7 @@ function StoreBadges() {
             borderRadius: 1,
           },
         }}
-        aria-label="Download Stock Market Kings free on the App Store"
+        aria-label="Download Paper Trading Simulator free on the App Store"
       >
         <Box
           component="img"
@@ -385,7 +385,7 @@ const Footer = ({ mobile }) => {
             href="https://www.twitter.com/Smarket_King/"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Follow Stock Market Kings on X (Twitter)"
+            aria-label="Follow Paper Trading Simulator on X (Twitter)"
             sx={{ display: "inline-flex", lineHeight: 0, ml: mobile ? 0 : 1 }}
           >
             <Box
